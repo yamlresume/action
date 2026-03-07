@@ -1,0 +1,213 @@
+name: Test YAMLResume Action
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test-single-resume:
+    name: Test Single Resume Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build single resume
+        id: build
+        uses: ./
+        with:
+          resumes: tests/fixtures/resume-en.yml
+
+      - name: Verify outputs
+        run: |
+          echo "PDF files: ${{ steps.build.outputs.pdf-files }}"
+          echo "TeX files: ${{ steps.build.outputs.tex-files }}"
+
+          # Check PDF was generated
+          if [ ! -f "tests/fixtures/resume-en.pdf" ]; then
+            echo "ERROR: PDF file not generated"
+            exit 1
+          fi
+          
+          # Check TeX was generated
+          if [ ! -f "tests/fixtures/resume-en.tex" ]; then
+            echo "ERROR: TeX file not generated"
+            exit 1
+          fi
+          
+          echo "All outputs verified successfully!"
+
+  test-multiple-resumes:
+    name: Test Multiple Resumes Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build multiple resumes
+        id: build
+        uses: ./
+        with:
+          resumes: |
+            tests/fixtures/resume-en.yml
+            tests/fixtures/resume-zh-hans.yml
+
+      - name: Verify outputs
+        run: |
+          echo "PDF files:"
+          echo "${{ steps.build.outputs.pdf-files }}"
+          echo ""
+          echo "TeX files:"
+          echo "${{ steps.build.outputs.tex-files }}"
+          
+          # Check all PDFs were generated
+          for pdf in tests/fixtures/resume-en.pdf tests/fixtures/resume-zh-hans.pdf; do
+            if [ ! -f "$pdf" ]; then
+              echo "ERROR: $pdf not generated"
+              exit 1
+            fi
+          done
+          
+          echo "All outputs verified successfully!"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: multiple-resumes-output
+          path: |
+            tests/fixtures/*.pdf
+            tests/fixtures/*.tex
+
+  test-no-pdf-flag:
+    name: Test --no-pdf Flag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build resume without PDF
+        id: build
+        uses: ./
+        with:
+          resumes: tests/fixtures/resume-en.yml
+          no-pdf: true
+
+      - name: Verify outputs
+        run: |
+          # TeX should exist
+          if [ ! -f "tests/fixtures/resume-en.tex" ]; then
+            echo "ERROR: TeX file not generated"
+            exit 1
+          fi
+          
+          # PDF should NOT exist
+          if [ -f "tests/fixtures/resume-en.pdf" ]; then
+            echo "ERROR: PDF file was generated but --no-pdf was specified"
+            exit 1
+          fi
+          
+          echo "--no-pdf flag working correctly!"
+
+  test-no-validate-flag:
+    name: Test --no-validate Flag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build resume without validation
+        id: build
+        uses: ./
+        with:
+          resumes: tests/fixtures/resume-en.yml
+          no-validate: true
+
+      - name: Verify outputs
+        run: |
+          if [ ! -f "tests/fixtures/resume-en.pdf" ]; then
+            echo "ERROR: PDF file not generated"
+            exit 1
+          fi
+          
+          echo "--no-validate flag working correctly!"
+
+  test-verbose-flag:
+    name: Test --verbose Flag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build resume with verbose output
+        id: build
+        uses: ./
+        with:
+          resumes: tests/fixtures/resume-en.yml
+          verbose: true
+
+      - name: Verify outputs
+        run: |
+          if [ ! -f "tests/fixtures/resume-en.pdf" ]; then
+            echo "ERROR: PDF file not generated"
+            exit 1
+          fi
+          
+          echo "--verbose flag working correctly!"
+
+  test-missing-file:
+    name: Test Missing File Error
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build non-existent resume (should fail)
+        id: build
+        uses: ./
+        continue-on-error: true
+        with:
+          resumes: tests/fixtures/non-existent.yml
+
+      - name: Verify failure
+        run: |
+          if [ "${{ steps.build.outcome }}" = "success" ]; then
+            echo "ERROR: Build should have failed for non-existent file"
+            exit 1
+          fi
+          
+          echo "Error handling working correctly!"
+
+  test-combined-flags:
+    name: Test Combined Flags
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build resume with multiple flags
+        id: build
+        uses: ./
+        with:
+          resumes: tests/fixtures/resume-en.yml
+          no-pdf: true
+          no-validate: true
+          verbose: true
+
+      - name: Verify outputs
+        run: |
+          # TeX should exist
+          if [ ! -f "tests/fixtures/resume-en.tex" ]; then
+            echo "ERROR: TeX file not generated"
+            exit 1
+          fi
+          
+          # PDF should NOT exist (--no-pdf)
+          if [ -f "tests/fixtures/resume-en.pdf" ]; then
+            echo "ERROR: PDF file was generated but --no-pdf was specified"
+            exit 1
+          fi
+          
+          echo "Combined flags working correctly!"

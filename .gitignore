@@ -1,0 +1,20 @@
+# Generated resume files
+*.pdf
+*.tex
+*.html
+*.aux
+*.log
+*.out
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (if any)
+node_modules/
