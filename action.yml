@@ -1,48 +1,48 @@
-name: 'YAMLResume Build'
-description: 'Build professional resumes from YAML files using YAMLResume CLI'
-author: 'YAMLResume'
+name: YAMLResume
+description: 'YAMLResume: Craft resumes as code in YAML and generate pixel perfect resumes in multiple formats (PDF, HTML, Markdown, etc.) in a breeze.'
+author: YAMLResume (https://yamlresume.dev)
 
 branding:
-  icon: 'file-text'
-  color: 'blue'
+  icon: layout
+  color: gray-dark
 
 inputs:
   resumes:
-    description: 'Newline-separated list of resume YAML files to build'
+    description: Newline-separated list of resume YAML files to build
     required: true
   no-validate:
-    description: 'Skip schema validation'
+    description: Skip schema validation
     required: false
-    default: 'false'
+    default: false
   no-pdf:
-    description: 'Skip PDF generation (generate only LaTeX)'
+    description: Skip PDF generation (generate only LaTeX)
     required: false
-    default: 'false'
+    default: false
   verbose:
-    description: 'Enable verbose output'
+    description: Enable verbose output
     required: false
-    default: 'false'
+    default: false
   version:
-    description: 'YAMLResume Docker image version'
+    description: YAMLResume Docker image version
     required: false
-    default: 'v0.11.2'
+    default: v0.11.2
 
 outputs:
   pdf-files:
-    description: 'Newline-separated list of generated PDF files'
+    description: Newline-separated list of generated PDF files
     value: ${{ steps.build.outputs.pdf-files }}
   tex-files:
-    description: 'Newline-separated list of generated LaTeX files'
+    description: Newline-separated list of generated LaTeX files
     value: ${{ steps.build.outputs.tex-files }}
   html-files:
-    description: 'Newline-separated list of generated HTML files'
+    description: Newline-separated list of generated HTML files
     value: ${{ steps.build.outputs.html-files }}
   md-files:
-    description: 'Newline-separated list of generated Markdown files'
+    description: Newline-separated list of generated Markdown files
     value: ${{ steps.build.outputs.md-files }}
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Check Docker availability
       shell: bash
