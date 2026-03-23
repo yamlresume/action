@@ -1,0 +1,12 @@
+{
+  "name": "@yamlresume/action",
+  "private": true,
+  "description": "YAMLResume GitHub Action - Build resume to HTML, Markdown, PDF, etc. from YAML",
+  "scripts": {
+    "release": "commit-and-tag-version -c .versionrc.cjs"
+  },
+  "devDependencies": {
+    "commit-and-tag-version": "^12.6.0"
+  },
+  "version": "0.1.1"
+}
