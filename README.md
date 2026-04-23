@@ -119,7 +119,7 @@ jobs:
 | `no-validate` | Skip schema validation                               | No       | `false`   |
 | `no-pdf`      | Skip PDF generation (generate only LaTeX)            | No       | `false`   |
 | `verbose`     | Enable verbose output                                | No       | `false`   |
-| `version`     | YAMLResume Docker image version                      | No       | `v0.12.2` |
+| `version`     | YAMLResume Docker image version                      | No       | `v0.12.3` |
 
 ## Outputs
 
