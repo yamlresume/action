@@ -25,7 +25,7 @@ RESUMES="${INPUT_RESUMES:-}"
 NO_VALIDATE="${INPUT_NO_VALIDATE:-false}"
 NO_PDF="${INPUT_NO_PDF:-false}"
 VERBOSE="${INPUT_VERBOSE:-false}"
-VERSION="${INPUT_VERSION:-v0.13.1}"
+VERSION="${INPUT_VERSION:-0.13.2}"
 
 # Working directory (GITHUB_WORKSPACE in CI, current directory locally)
 WORKSPACE="${GITHUB_WORKSPACE:-$(pwd)}"
