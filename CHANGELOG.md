@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.13.2](https://github.com/yamlresume/action/compare/v0.13.1...v0.13.2) (2026-07-19)
+
+
+### Features
+
+* bump yamlresume from v0.13.1 to v0.13.2 ([b60366a](https://github.com/yamlresume/action/commit/b60366a7113bba6a0f8c9e012572f129f70eab76))
+
 ## [0.13.1](https://github.com/yamlresume/action/compare/v0.13.0...v0.13.1) (2026-06-12)
 
 
