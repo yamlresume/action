@@ -3,6 +3,7 @@
   "private": true,
   "description": "YAMLResume GitHub Action - Build resume to HTML, Markdown, PDF, etc. from YAML",
   "scripts": {
+    "bump": "node scripts/bump.js",
     "release": "commit-and-tag-version -c .versionrc.cjs"
   },
   "devDependencies": {
