@@ -5,9 +5,39 @@
 //
 
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 function normalizeVersion(version) {
   return version.trim();
+}
+
+function getPreviousVersion(newVersion) {
+  const pattern = /bump yamlresume from \S+ to (\S+)/i;
+  try {
+    const log = execSync('git log --format=%s', { encoding: 'utf8' });
+    for (const line of log.split('\n')) {
+      const match = line.match(pattern);
+      if (match && match[1] !== newVersion) {
+        return match[1];
+      }
+    }
+  } catch {
+    // fall through
+  }
+  throw new Error(
+    'Could not determine previous version from git log. ' +
+      `Expected a commit like "feat: bump yamlresume from x to y".`
+  );
+}
+
+function commitChanges(previousVersion, newVersion) {
+  const message = `feat: bump yamlresume from ${previousVersion} to ${newVersion}`;
+  const files = ['action.yml', 'scripts/build.sh', 'README.md'];
+  execSync(`git add -- ${files.map((f) => `"${f}"`).join(' ')}`);
+  execSync(`git commit -m ${JSON.stringify(message)}`, {
+    stdio: 'inherit',
+  });
+  console.log(`Committed with message: ${message}`);
 }
 
 function readFile(filePath) {
@@ -74,10 +104,14 @@ function main() {
     { file: 'README.md', previous: updateReadme(newVersion) },
   ];
 
+  const previousVersion = getPreviousVersion(newVersion);
+
   console.log(`Bumped YAMLResume version to ${newVersion}:`);
   for (const update of updates) {
     console.log(`  ${update.file}: ${update.previous} -> ${newVersion}`);
   }
+
+  commitChanges(previousVersion, newVersion);
 }
 
 main();
