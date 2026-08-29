@@ -9,5 +9,5 @@
   "devDependencies": {
     "commit-and-tag-version": "^12.6.0"
   },
-  "version": "0.15.2"
+  "version": "0.15.3"
 }
