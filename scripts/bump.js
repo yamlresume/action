@@ -78,16 +78,21 @@ function updateBuildSh(version) {
 
 function updateReadme(version) {
   const path = 'README.md';
-  const content = readFile(path);
+  let content = readFile(path);
   const match = content.match(/(\|\s*`version`\s*\|\s*YAMLResume Docker image version\s*\|\s*No\s*\|\s*`)([^`]+)(`\s*\|)/);
 
   if (!match) {
     throw new Error(`Could not find version input row in ${path}`);
   }
 
-  const newContent = content.replace(match[0], `${match[1]}${version}${match[3]}`);
-  writeFile(path, newContent);
-  return match[2];
+  const previous = match[2];
+  content = content.replace(match[0], `${match[1]}${version}${match[3]}`);
+
+  const usesPattern = /(yamlresume\/action@)(\S+)/g;
+  content = content.replace(usesPattern, (_, prefix) => `${prefix}${version}`);
+
+  writeFile(path, content);
+  return previous;
 }
 
 function main() {
