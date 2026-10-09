@@ -19,7 +19,7 @@ Build professional resumes from YAML files using
 Build a single resume:
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   with:
     resumes: resume.yml
 ```
@@ -29,7 +29,7 @@ Build a single resume:
 Build multiple resumes using newline-separated list:
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   with:
     resumes: |
       resume-en.yml
@@ -42,7 +42,7 @@ Build multiple resumes using newline-separated list:
 Generate only LaTeX files (useful for custom PDF pipelines):
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   with:
     resumes: resume.yml
     no-pdf: true
@@ -53,7 +53,7 @@ Generate only LaTeX files (useful for custom PDF pipelines):
 Skip schema validation during build:
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   with:
     resumes: resume.yml
     no-validate: true
@@ -64,7 +64,7 @@ Skip schema validation during build:
 Use with `actions/upload-artifact` to save generated files:
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   id: build
   with:
     resumes: resume.yml
@@ -95,7 +95,7 @@ jobs:
 
       - name: Build resumes
         id: build
-        uses: yamlresume/action@v0.16.1
+        uses: yamlresume/action@v0.17.0
         with:
           resumes: |
             resume-en.yml
@@ -119,7 +119,7 @@ jobs:
 | `no-validate` | Skip schema validation                               | No       | `false`   |
 | `no-pdf`      | Skip PDF generation (generate only LaTeX)            | No       | `false`   |
 | `verbose`     | Enable verbose output                                | No       | `false`   |
-| `version`     | YAMLResume Docker image version                      | No       | `v0.16.1` |
+| `version`     | YAMLResume Docker image version                      | No       | `v0.17.0` |
 
 ## Outputs
 
@@ -133,7 +133,7 @@ jobs:
 ### Using Outputs
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   id: build
   with:
     resumes: resume.yml
@@ -230,7 +230,7 @@ Actions runners expect root access to the workspace.
 Enable verbose output to see detailed build logs:
 
 ```yaml
-- uses: yamlresume/action@v0.16.1
+- uses: yamlresume/action@v0.17.0
   with:
     resumes: resume.yml
     verbose: true
