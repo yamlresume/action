@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.18.0](https://github.com/yamlresume/action/compare/v0.17.0...v0.18.0) (2026-11-15)
+
+
+### Features
+
+* add Typst outputs and multi-engine PDF names ([6250a97](https://github.com/yamlresume/action/commit/6250a97207757ea57065ad5c0a31e7fbd2e112ef))
+
 ## [0.17.0](https://github.com/yamlresume/action/compare/v0.16.1...v0.17.0) (2026-10-09)
 
 
