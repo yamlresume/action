@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # YAMLResume GitHub Action - Build Script
-# Builds resume YAML files to PDF/LaTeX using the yamlresume Docker image
+# Builds resume YAML files to PDF, LaTeX and Typst using the yamlresume Docker image
 #
 
 set -euo pipefail
@@ -25,7 +25,7 @@ RESUMES="${INPUT_RESUMES:-}"
 NO_VALIDATE="${INPUT_NO_VALIDATE:-false}"
 NO_PDF="${INPUT_NO_PDF:-false}"
 VERBOSE="${INPUT_VERBOSE:-false}"
-VERSION="${INPUT_VERSION:-v0.17.0}"
+VERSION="${INPUT_VERSION:-v0.18.0}"
 
 # Working directory (GITHUB_WORKSPACE in CI, current directory locally)
 WORKSPACE="${GITHUB_WORKSPACE:-$(pwd)}"
@@ -36,6 +36,7 @@ GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
 # Arrays to collect output files
 PDF_FILES=()
 TEX_FILES=()
+TYP_FILES=()
 HTML_FILES=()
 MD_FILES=()
 
@@ -85,7 +86,9 @@ build_resume() {
         
         log_info "Successfully built: $resume"
         
-        # Collect output files
+        # Collect output files. When both LaTeX and Typst PDF engines are
+        # configured, YAMLResume writes resume.tex.pdf and resume.typ.pdf
+        # instead of a single resume.pdf.
         local base_name="${resume%.yml}"
         base_name="${base_name%.yaml}"
         
@@ -93,8 +96,20 @@ build_resume() {
             PDF_FILES+=("${base_name}.pdf")
         fi
         
+        if [ -f "${WORKSPACE}/${base_name}.tex.pdf" ]; then
+            PDF_FILES+=("${base_name}.tex.pdf")
+        fi
+        
+        if [ -f "${WORKSPACE}/${base_name}.typ.pdf" ]; then
+            PDF_FILES+=("${base_name}.typ.pdf")
+        fi
+        
         if [ -f "${WORKSPACE}/${base_name}.tex" ]; then
             TEX_FILES+=("${base_name}.tex")
+        fi
+        
+        if [ -f "${WORKSPACE}/${base_name}.typ" ]; then
+            TYP_FILES+=("${base_name}.typ")
         fi
         
         if [ -f "${WORKSPACE}/${base_name}.html" ]; then
@@ -164,6 +179,13 @@ main() {
             echo "EOF"
         } >> "$GITHUB_OUTPUT"
         
+        # Output Typst files (newline-separated)
+        {
+            echo "typ-files<<EOF"
+            printf '%s\n' "${TYP_FILES[@]:-}"
+            echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+        
         # Output HTML files (newline-separated)
         {
             echo "html-files<<EOF"
@@ -188,6 +210,10 @@ main() {
     done
     log_info "  TeX files: ${#TEX_FILES[@]}"
     for f in "${TEX_FILES[@]:-}"; do
+        echo "    - $f"
+    done
+    log_info "  Typst files: ${#TYP_FILES[@]}"
+    for f in "${TYP_FILES[@]:-}"; do
         echo "    - $f"
     done
     log_info "  HTML files: ${#HTML_FILES[@]}"

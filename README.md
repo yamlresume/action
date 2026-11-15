@@ -19,7 +19,7 @@ Build professional resumes from YAML files using
 Build a single resume:
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   with:
     resumes: resume.yml
 ```
@@ -29,7 +29,7 @@ Build a single resume:
 Build multiple resumes using newline-separated list:
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   with:
     resumes: |
       resume-en.yml
@@ -39,10 +39,10 @@ Build multiple resumes using newline-separated list:
 
 ### Skip PDF Generation
 
-Generate only LaTeX files (useful for custom PDF pipelines):
+Generate only LaTeX and Typst source files (useful for custom PDF pipelines):
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   with:
     resumes: resume.yml
     no-pdf: true
@@ -53,7 +53,7 @@ Generate only LaTeX files (useful for custom PDF pipelines):
 Skip schema validation during build:
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   with:
     resumes: resume.yml
     no-validate: true
@@ -64,7 +64,7 @@ Skip schema validation during build:
 Use with `actions/upload-artifact` to save generated files:
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   id: build
   with:
     resumes: resume.yml
@@ -72,7 +72,9 @@ Use with `actions/upload-artifact` to save generated files:
 - uses: actions/upload-artifact@v4
   with:
     name: resume-pdf
-    path: resume.pdf
+    path: |
+      *.pdf
+      *.typ
 ```
 
 ### Complete Workflow Example
@@ -95,7 +97,7 @@ jobs:
 
       - name: Build resumes
         id: build
-        uses: yamlresume/action@v0.17.0
+        uses: yamlresume/action@v0.18.0
         with:
           resumes: |
             resume-en.yml
@@ -109,6 +111,7 @@ jobs:
           path: |
             *.pdf
             *.tex
+            *.typ
 ```
 
 ## Inputs
@@ -117,9 +120,9 @@ jobs:
 | ------------- | ---------------------------------------------------- | -------- | --------- |
 | `resumes`     | Newline-separated list of resume YAML files to build | Yes      | -         |
 | `no-validate` | Skip schema validation                               | No       | `false`   |
-| `no-pdf`      | Skip PDF generation (generate only LaTeX)            | No       | `false`   |
+| `no-pdf`      | Skip PDF generation (generate only LaTeX and Typst) | No       | `false`   |
 | `verbose`     | Enable verbose output                                | No       | `false`   |
-| `version`     | YAMLResume Docker image version                      | No       | `v0.17.0` |
+| `version`     | YAMLResume Docker image version                      | No       | `v0.18.0` |
 
 ## Outputs
 
@@ -127,13 +130,14 @@ jobs:
 | ------------ | ------------------------------------------------ |
 | `pdf-files`  | Newline-separated list of generated PDF files    |
 | `tex-files`  | Newline-separated list of generated LaTeX files  |
+| `typ-files`  | Newline-separated list of generated Typst files  |
 | `html-files` | Newline-separated list of generated HTML files   |
 | `md-files`   | Newline-separated list of generated Markdown files |
 
 ### Using Outputs
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   id: build
   with:
     resumes: resume.yml
@@ -144,6 +148,9 @@ jobs:
 
     echo "Generated TeX files:"
     echo "${{ steps.build.outputs.tex-files }}"
+
+    echo "Generated Typst files:"
+    echo "${{ steps.build.outputs.typ-files }}"
 
     echo "Generated HTML files:"
     echo "${{ steps.build.outputs.html-files }}"
@@ -230,7 +237,7 @@ Actions runners expect root access to the workspace.
 Enable verbose output to see detailed build logs:
 
 ```yaml
-- uses: yamlresume/action@v0.17.0
+- uses: yamlresume/action@v0.18.0
   with:
     resumes: resume.yml
     verbose: true

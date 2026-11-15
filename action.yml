@@ -15,7 +15,7 @@ inputs:
     required: false
     default: false
   no-pdf:
-    description: Skip PDF generation (generate only LaTeX)
+    description: Skip PDF generation (generate only LaTeX and Typst)
     required: false
     default: false
   verbose:
@@ -25,7 +25,7 @@ inputs:
   version:
     description: YAMLResume Docker image version
     required: false
-    default: v0.17.0
+    default: v0.18.0
 
 outputs:
   pdf-files:
@@ -34,6 +34,9 @@ outputs:
   tex-files:
     description: Newline-separated list of generated LaTeX files
     value: ${{ steps.build.outputs.tex-files }}
+  typ-files:
+    description: Newline-separated list of generated Typst files
+    value: ${{ steps.build.outputs.typ-files }}
   html-files:
     description: Newline-separated list of generated HTML files
     value: ${{ steps.build.outputs.html-files }}
